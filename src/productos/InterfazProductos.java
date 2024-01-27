@@ -1,0 +1,483 @@
+/*
+ * Haz clic en nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt para cambiar esta licencia
+ * Haz clic en nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java para editar esta plantilla
+ */
+package productos;
+
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import java.awt.Color;
+import javax.swing.BoxLayout;
+
+/**
+ * Interfaz de Productos
+ * Autor: Vanessa
+ */
+public class InterfazProductos extends javax.swing.JFrame {
+
+    private javax.swing.JTable Tabla;
+    private javax.swing.JButton agregarProducto;
+    private javax.swing.JButton clonarProducto;
+    private javax.swing.JButton eliminarProducto;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel Panel1;
+    private javax.swing.JPanel Panel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel msgDB;
+    private javax.swing.JTextField name;
+    private javax.swing.JTextField quantity;
+    private javax.swing.JLabel totalPrc;
+    private javax.swing.JLabel totalPrd;
+    private javax.swing.JTextField unitPrice;
+
+    Observer precio_total;
+    Observer productos_total;
+    Observer db;
+
+    Observable observable_precio;
+    Observable observable_total;
+    Observable observable_db;
+
+    ArrayList<BaseDeDatos> dbs;
+    ArrayList<Productos> lista = new ArrayList<>();
+    DefaultTableModel modelo = new DefaultTableModel();
+
+    /**
+     * Crea una nueva instancia de la interfaz de productos
+     */
+    public InterfazProductos() {
+        initComponents();
+
+        modelo = (DefaultTableModel) Tabla.getModel();
+
+        precio_total = new Observer(totalPrc);
+        productos_total = new Observer(totalPrd);
+        db = new Observer(msgDB);
+
+        observable_precio = new Observable(precio_total);
+        observable_precio.addObserver(precio_total);
+
+        observable_total = new Observable(productos_total);
+        observable_total.addObserver(productos_total);
+
+        observable_db = new Observable(db);
+        observable_db.addObserver(db);
+
+        dbs = FabricaBaseDeDatos.getAllDbs();
+
+        ArrayList<Integer> inventario = getInventario();
+        int cantidad = inventario.get(0);
+        int valor = inventario.get(1);
+
+        observable_total.notify_All(String.valueOf(cantidad));
+        observable_precio.notify_All(String.valueOf(valor));
+
+        this.rellenar();
+        this.setSize(600, 650);
+        this.getContentPane().setBackground(new Color(240, 240, 240));
+        Panel1.setBackground(new Color(240, 240, 240));
+        Panel2.setBackground(new Color(240, 240, 240));
+        Panel1.setBounds(0, 0, 600, 200);
+        Panel2.setBounds(0, 200, 600, 400);
+        Tabla.setBackground(new Color(255, 255, 255));
+        Tabla.setSelectionBackground(new Color(173, 216, 230));
+        jLabel1.setBounds(10, 10, 150, 30);
+        jScrollPane1.setBounds(10, 10, 380, 200);
+        
+
+        agregarProducto.setBackground(new Color(0, 128, 0));
+        eliminarProducto.setBackground(new Color(255, 0, 0));
+        clonarProducto.setBackground(new Color(255, 165, 0));
+        agregarProducto.setBounds(20, 250, 100, 30);
+        eliminarProducto.setBounds(140, 250, 100, 30);
+        clonarProducto.setBounds(260, 250, 100, 30);
+
+        Panel1.add(agregarProducto);
+        Panel1.add(eliminarProducto);
+        Panel1.add(clonarProducto);
+
+        this.setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        this.add(Panel1);
+        this.add(Panel2);
+
+    }
+
+    private void getProductos() {
+        lista.clear();
+        for (BaseDeDatos db : dbs) {
+            lista.addAll(db.listaProductos());
+        }
+    }
+
+    private void rellenar() {
+        getProductos();
+        modelo.setRowCount(0);
+        for (Productos p : lista) {
+            modelo.addRow(p.getObject());
+        }
+    }
+
+    private ArrayList<Integer> getInventario() {
+        ArrayList<Integer> list = new ArrayList<>();
+        int total_precio = 0, total_cantidad = 0;
+        for (BaseDeDatos db : dbs) {
+            total_cantidad += db.getCantidad();
+            total_precio += db.getTotal();
+        }
+        list.add(total_cantidad);
+        list.add(total_precio);
+        return list;
+    }
+
+
+    private void update(String msg) {
+        ArrayList<Integer> inventario = getInventario();
+        int cantidad = inventario.get(0);
+        int valor = inventario.get(1);
+
+        observable_total.notify_All(String.valueOf(cantidad));
+        observable_precio.notify_All(String.valueOf(valor));
+        observable_db.notify_All(msg);
+
+        this.rellenar();
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        Panel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        name = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        quantity = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        unitPrice = new javax.swing.JTextField();
+        msgDB = new javax.swing.JLabel();
+        agregarProducto = new javax.swing.JButton();
+        eliminarProducto = new javax.swing.JButton();
+        clonarProducto = new javax.swing.JButton();
+        Panel2 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        Tabla = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+        totalPrd = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        totalPrc = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
+
+        jLabel1.setFont(new java.awt.Font("Verdana", 1, 18)); // NOI18N
+        jLabel1.setText("Productos");
+
+        jLabel4.setText("Nombre del Producto");
+
+        name.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        jLabel5.setText("Cantidad");
+
+        quantity.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        jLabel6.setText("Precio por unidad");
+
+        unitPrice.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        //unitPrice.setBorder(null);
+
+        msgDB.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+
+        agregarProducto.setText("Agregar");
+        agregarProducto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addProductMouseClicked(evt);
+            }
+        });
+
+        eliminarProducto.setText("Eliminar");
+        eliminarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delProductActionPerformed(evt);
+            }
+        });
+
+        clonarProducto.setText("Clonar");
+        clonarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cloneProductActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(Panel1);
+    Panel1.setLayout(jPanel1Layout);
+    jPanel1Layout.setHorizontalGroup(
+        jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(jPanel1Layout.createSequentialGroup()
+            .addContainerGap()
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(msgDB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addComponent(jLabel1)
+                    .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel4)
+                                .addComponent(jLabel5))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(name, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                                .addComponent(quantity)))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jLabel6)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(unitPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                            .addComponent(agregarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(eliminarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(clonarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(0, 0, Short.MAX_VALUE)))
+                    .addContainerGap())))
+    );
+    jPanel1Layout.setVerticalGroup(
+        jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(jPanel1Layout.createSequentialGroup()
+            .addContainerGap()
+            .addComponent(jLabel1)
+            .addGap(18, 18, 18)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel4)
+                .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(18, 18, 18)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel5)
+                .addComponent(quantity, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(25, 25, 25)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel6)
+                .addComponent(unitPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(18, 18, 18)
+            .addComponent(msgDB, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(agregarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(eliminarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(clonarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addContainerGap(55, Short.MAX_VALUE))
+    );
+
+        Tabla.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nombre", "Cantidad", "Valor", "DB"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        Tabla.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                PrdTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(Tabla);
+        if (Tabla.getColumnModel().getColumnCount() > 0) {
+            Tabla.getColumnModel().getColumn(0).setResizable(false);
+            Tabla.getColumnModel().getColumn(1).setResizable(false);
+        }
+
+        jLabel2.setFont(new java.awt.Font("Segoe InterfazProductos", 1, 12)); // NOI18N
+        jLabel2.setText("Cantidad de productos: ");
+
+        totalPrd.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        totalPrd.setText("--");
+        totalPrc.setBorder(null);
+
+        jLabel3.setFont(new java.awt.Font("Segoe InterfazProductos", 1, 12)); // NOI18N
+        jLabel3.setText("Total de inventario: ");
+
+        totalPrc.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        totalPrc.setText("--");
+        totalPrc.setBorder(null);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(Panel2);
+        Panel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(53, 53, 53)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3))
+                .addGap(76, 76, 76)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(totalPrd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(totalPrc))
+                .addGap(56, 56, 56))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(totalPrd, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(totalPrc, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(Panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(Panel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Panel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+
+    private void addProductMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addProductMouseClicked
+        String msg = "";
+        try {
+            Productos product = new Productos(name.getText(), Integer.parseInt(quantity.getText()), Integer.parseInt(unitPrice.getText()));
+
+            //Coneciones
+            BaseDeDatos db = FabricaBaseDeDatos.fabrica(product);
+
+            msg = db.agregarProducto(product);
+
+            this.update(msg);
+
+            //reset input
+            name.setText("");
+            quantity.setText("");
+            unitPrice.setText("");
+
+        } catch (NumberFormatException ne) {
+            msg = "Existen campos vacios";
+            observable_db.notify_All(msg);
+        }
+    }//GEN-LAST:event_addProductMouseClicked
+
+    private void PrdTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_PrdTableMouseClicked
+
+    }//GEN-LAST:event_PrdTableMouseClicked
+
+    private void delProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delProductActionPerformed
+        // TODO add your handling code here:
+        int selectedPrd = Tabla.getSelectedRow();
+        String msg = ""; BaseDeDatos db;
+        try {
+            if (selectedPrd != -1) {
+                int valor = (int) modelo.getValueAt(selectedPrd, 2);
+                Productos product = lista.get(selectedPrd);
+                if (valor > 100000){
+                    db = FabricaBaseDeDatos.getDb("SQLite");
+                } else {
+                    db = FabricaBaseDeDatos.getDb("MySQL");
+                }
+                msg = db.eliminarProducto(product);
+                this.update(msg);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }//GEN-LAST:event_delProductActionPerformed
+
+    private void cloneProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cloneProductActionPerformed
+        // TODO add your handling code here:
+        int selectedPrd = Tabla.getSelectedRow();
+        String msg = "";
+        try {
+            if (selectedPrd != -1) {
+                Productos clone = (Productos) lista.get(selectedPrd).clone();
+                BaseDeDatos db = FabricaBaseDeDatos.fabrica(clone);
+
+                msg = db.agregarProducto(clone);
+                this.update(msg);
+            }
+        } catch (CloneNotSupportedException e) {
+            System.out.println(e.getMessage());
+        }
+    }//GEN-LAST:event_cloneProductActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(InterfazProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(InterfazProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(InterfazProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(InterfazProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new InterfazProductos().setVisible(true);
+            }
+        });
+    }
+
+}
